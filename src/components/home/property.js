@@ -5,6 +5,9 @@ import { withSession } from '../session';
 
 class PropertyPanel extends Component {
     onCloseSubmit = () => {
+        console.log(this.props.user);
+        console.log(this.props.userData);
+        console.log(this.props.property);
         this.props.setProperty(null);
     }
 
@@ -19,8 +22,8 @@ class PropertyPanel extends Component {
 
                     height: '48%',
                     width: '100%',
-                    paddingTop: '20px',
-                    paddingBottom: '20px',
+                    paddingTop: '25px',
+                    paddingBottom: '25px',
 
                     color: '#36454F',
                     borderRadius: '5px',
@@ -110,13 +113,15 @@ class PropertyPanel extends Component {
                         alignItems: 'center'
                     }}
                 >
-                    <Button
-                        variant='dark'
-                        size='sm'
-                        style={{ width: '250px' }}
-                    >
-                        Buy Property
-                    </Button>
+                    {(this.props.userData.id !== this.props.property.owner) &&
+                        <Button
+                            variant='dark'
+                            size='sm'
+                            style={{ width: '250px' }}
+                        >
+                            Buy Property
+                        </Button>
+                    }
 
                     <Button
                         onClick={this.onCloseSubmit}

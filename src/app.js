@@ -15,6 +15,7 @@ class App extends Component {
             userData: null,
             property: null,
             fetching: true,
+            initialAuthChange: false,
             setUserData: this.setUserData,
             setProperty: this.setProperty,
             setFetching: this.setFetching
@@ -24,12 +25,12 @@ class App extends Component {
     componentDidMount() {
         this.listener = this.props.firebase.auth.onAuthStateChanged(
             user => { 
-                if (user) {
-                    this.setState({ user: user }, () => {
-                        this.setUserData();
-                    });
-                }
-                else this.setState({ user: null });
+                if (user) this.setState({ user: user }, this.setUserData);
+                else this.setState({
+                    user: null,
+                    fetching: false, 
+                    initialAuthChange: true 
+                });
             }
         );
     }
@@ -37,6 +38,28 @@ class App extends Component {
     componentWillUnmount() {
         this.listener && this.listener();
         this.listener = undefined;
+    }
+
+    setUserData = () => {
+        this.setState({ fetching: true }, () => {
+            this.props.firebase.fetchUserData()
+                .then(userData => {
+                    if (userData) this.setState({ 
+                        userData: userData,
+                        fetching: false,
+                        initialAuthChange: true
+                    });
+                    else throw new Error ('Error fetching user data.');
+                })
+                .catch(err => {
+                    console.log('setUserData: ' + err); 
+                    this.setState({ 
+                        userData: null,
+                        fetching: false,
+                        initialAuthChange: true
+                    });
+                });
+        });
     }
 
     setProperty = id => {
@@ -68,26 +91,6 @@ class App extends Component {
         this.setState({ fetching: fetching });
     }
 
-    setUserData = () => {
-        this.setState({ fetching: true }, () => {
-            this.props.firebase.fetchUserData()
-                .then(userData => {
-                    if (userData) this.setState({ 
-                        userData: userData,
-                        fetching: false
-                    });
-                    else throw new Error ('Error fetching user data.');
-                })
-                .catch(err => { 
-                    console.log('setUserData: ' + err); 
-                    this.setState({ 
-                        userData: null,
-                        fetching: false
-                    });
-                });
-        });
-    }
-
     render() {
         return (
             <SessionContext.Provider value={this.state}>
@@ -96,10 +99,11 @@ class App extends Component {
                 <LoaderSpinner />
                 
                 {/* home page overlay */}
-                <HomePage />
+                {this.state.initialAuthChange && <HomePage />}
 
                 {/* map page underlay*/}
                 <MapPage />
+                
             </SessionContext.Provider>
         );
     }
