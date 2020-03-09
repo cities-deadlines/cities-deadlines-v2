@@ -36,7 +36,7 @@ class PropertyPanel extends Component {
                         fontSize: '20px'
                     }}
                 >
-                    {this.props.property.name}
+                    {this.props.property.id}
                 </div>
 
                 {/* property info */}
@@ -73,7 +73,7 @@ class PropertyPanel extends Component {
                         }}
                     >
                         <div>Growth (Last Hour)</div>
-                        <div>0%</div>
+                        <div>{this.props.property.hourGrowth}</div>
                     </div>
 
                     <div
@@ -85,7 +85,7 @@ class PropertyPanel extends Component {
                         }}
                     >
                         <div>Growth (Last Day)</div>
-                        <div>10%</div>
+                        <div>{this.props.property.dayGrowth}</div>
                     </div>
 
                     <div
@@ -97,7 +97,7 @@ class PropertyPanel extends Component {
                         }}
                     >
                         <div>Growth (Last Week)</div>
-                        <div>57%</div>
+                        <div>{this.props.property.weekGrowth}</div>
                     </div>
                 </div>
 
@@ -119,6 +119,7 @@ class PropertyPanel extends Component {
                     </Button>
 
                     <Button
+                        onClick={this.onCloseSubmit}
                         variant='dark'
                         size='sm'
                         style={{

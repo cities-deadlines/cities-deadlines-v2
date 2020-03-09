@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import UserPanel from './user';
 import PropertyPanel from './property';
+import { withSession } from '../session';
 
 class AuthOverlay extends Component {
     render() {
@@ -31,4 +32,4 @@ class AuthOverlay extends Component {
     }
 }
 
-export default AuthOverlay;
+export default withSession(AuthOverlay);

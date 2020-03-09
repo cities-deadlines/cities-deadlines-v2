@@ -27,7 +27,7 @@ class Firebase {
 
 
 
-    /*** USER API ***/
+    /*** AUTH API ***/
 
     doSignIn = () => {
         return this.auth.signInWithPopup(this.googleProvider);
@@ -39,6 +39,31 @@ class Firebase {
 
     getUser = () => {
         return this.auth.currentUser;
+    }
+
+
+
+    /*** USER API ***/
+
+    fetchUserData = () => {
+        const id = this.getUser().uid;
+        const userRef = this.db.collection('users').doc(id);
+        return userRef.get().then(userData => {
+            if (userData.exists) return userData.data();
+            else return null
+        });
+    }
+
+
+
+    /*** PROPERTY API ***/
+
+    fetchProperty = id => {
+        const propertyRef = this.db.collection('properties').doc(id);
+        return propertyRef.get().then(property => {
+            if (property.exists) return property.data();
+            else return null
+        });
     }
 }
 

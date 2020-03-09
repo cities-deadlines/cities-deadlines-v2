@@ -55,7 +55,7 @@ class UserPanel extends Component {
                             justifyContent: 'space-between',
 
                             width: '100%',
-                            padding: '15px',
+                            padding: '10px',
 
                             backgroundColor: 'white',
                             borderRadius: '5px',
@@ -63,14 +63,14 @@ class UserPanel extends Component {
                         }}
                     >
                         <div>Balance</div>
-                        <div>$100</div>
+                        <div>{this.props.userData.balance}</div>
                     </div>
 
                     {/* user */}
                     <div
                         style={{
                             marginTop: '10px',
-                            fontSize: '13px',
+                            fontSize: '14px',
                             fontStyle: 'italic'
                         }}
                     >
@@ -142,9 +142,18 @@ class UserPanel extends Component {
                             variant='light'
                             style={{ width: '100%', fontSize: '15px' }}
                         >
-                            <Dropdown.Item variant='light'>Property 1</Dropdown.Item>
-                            <Dropdown.Item>Property 2</Dropdown.Item>
-                            <Dropdown.Item>Property 3</Dropdown.Item>
+                            {this.props.userData.properties.map(property => {
+                                return (
+                                    <Dropdown.Item 
+                                        key={property}
+                                        onClick={() => { 
+                                            this.props.setProperty(property); 
+                                        }}
+                                    >
+                                        {property}
+                                    </Dropdown.Item>
+                                );
+                            })}
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>

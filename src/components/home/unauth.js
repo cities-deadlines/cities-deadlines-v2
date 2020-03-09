@@ -19,7 +19,7 @@ class UnauthOverlay extends Component {
             <>
                 <Button
                     onClick={this.onSignInSubmit}
-                    variant='outline-dark'
+                    variant='dark'
                     style={{
                         position: 'absolute',
                         top: '15px',

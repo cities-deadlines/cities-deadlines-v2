@@ -7,7 +7,7 @@ import { withSession } from '../session';
 
 class HomePage extends Component {
     render() {
-        if (this.props.user) var content = <AuthOverlay />;
+        if (this.props.user && this.props.userData) var content = <AuthOverlay />;
         else content = <UnauthOverlay />;
 
         return (

@@ -7,7 +7,7 @@ const SessionContext = React.createContext({
     fetching: false,
     setProperty: () => {},
     setFetching: () => {},
-    updateUserData: () => {}
+    setUserData: () => {}
 });
 
 const withSession = Component => props => (
@@ -21,7 +21,7 @@ const withSession = Component => props => (
                 fetching={session.fetching}
                 setProperty={session.setProperty}
                 setFetching={session.setFetching}
-                updateUserData={session.updateUserData}
+                setUserData={session.setUserData}
             />
         }
     </SessionContext.Consumer>
