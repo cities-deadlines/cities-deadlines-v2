@@ -16,10 +16,12 @@ class App extends Component {
             property: null,
             fetchingUser: true,
             fetchingProperty: false,
+            fetchingPayment: false,
             initialAuthChange: false,
             updateUserData: this.updateUserData,
             setProperty: this.setProperty,
-            updateProperty: this.updateProperty
+            updateProperty: this.updateProperty,
+            setFetching: this.setFetching
         };
     }
 
@@ -96,6 +98,15 @@ class App extends Component {
     updateProperty = () => {
         if (this.state.property) {
             this.setProperty(this.state.property.id);
+        }
+    }
+
+    setFetching = (arg, state, callback) => {
+        switch(arg) {
+            case 'user': this.setState({ fetchingUser: state }, callback); break;
+            case 'property': this.setState({ fetchingProperty: state }, callback); break;
+            case 'payment': this.setState({ fetchingPayment: state }, callback); break;
+            default: break;
         }
     }
 

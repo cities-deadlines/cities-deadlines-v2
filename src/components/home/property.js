@@ -35,7 +35,7 @@ class PropertyPanel extends Component {
                         color: '#36454F',
                         borderRadius: '5px',
                         backgroundColor: '#eeeeee',
-                        boxShadow: '0 0 5px rgba(0, 0, 0, 0.25)'
+                        boxShadow: '0 7px 14px 0 rgba(60, 66, 87, 0.12), 0 3px 6px 0 rgba(0, 0, 0, 0.12)'
                     }}
                 >
 

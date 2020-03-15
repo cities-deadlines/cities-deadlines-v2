@@ -5,6 +5,15 @@ import { withFirebase } from '../firebase';
 import { withSession } from '../session';
 
 class UserPanel extends Component {
+    constructor(props) {
+        super(props);
+
+        // create client stripe object
+        this.stripe = window.Stripe(
+            'pk_test_bOi4h0mR9hQplC4xycJDGnQ100wIqIIDQZ'
+        );
+    }
+
     onSignOutSubmit = event => {
         this.props.firebase
             .doSignOut()
@@ -13,6 +22,24 @@ class UserPanel extends Component {
             });
 
         event.preventDefault();
+    }
+
+    onAddBalanceSubmit = () => {
+        this.props.setFetching('payment', true, () => {
+            this.props.firebase.startPayment().then(session => {
+                this.stripe.redirectToCheckout({
+                    sessionId: session.id
+                }).then(result => {
+                    this.props.setFetching('payment', false, () => {
+                        console.log('balanceSubmit: ' + result);
+                    });
+                });
+            }); 
+        });
+    }   
+
+    onRedeemBalanceSubmit = () => {
+
     }
 
     render() {
@@ -32,7 +59,7 @@ class UserPanel extends Component {
                     color: '#36454F',
                     borderRadius: '5px',
                     backgroundColor: '#eeeeee',
-                    boxShadow: '0 0 5px rgba(0, 0, 0, 0.25)'
+                    boxShadow: '0 7px 14px 0 rgba(60, 66, 87, 0.12), 0 3px 6px 0 rgba(0, 0, 0, 0.12)'
                 }}
             >
 
@@ -94,6 +121,7 @@ class UserPanel extends Component {
 
                     {/* add balance button */}
                     <Button
+                        onClick={this.onAddBalanceSubmit}
                         variant='dark'
                         size='sm'
                         style={{ width: '100%' }}
@@ -103,6 +131,7 @@ class UserPanel extends Component {
 
                     {/* redeem balance button */}
                     <Button
+                        onClick={this.onRedeemBalanceSubmit}
                         variant='dark'
                         size='sm'
                         style={{

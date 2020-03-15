@@ -80,6 +80,25 @@ class Firebase {
             }).then(res => res.json());
         });
     }
+
+
+
+    /*** PAYMENT API ***/
+
+    startPayment = () => {
+        return this.getUser().getIdToken().then(token => {
+            return fetch(FUNCTIONS_URL + 'startPayment', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                }
+            }).then(res => res.json()).then(data => {
+                if (data.success) return data.session;
+                else return null;
+            });
+        });
+    }
 }
 
 export default Firebase;
