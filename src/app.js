@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import LoaderSpinner from './loader';
-import HomePage from './components/home';
-import MapPage from './components/map';
+import HomeOverlay from './components/home';
+import MapUnderlay from './components/map';
 import { SessionContext } from './components/session';
 import { withFirebase } from './components/firebase';
 
@@ -14,21 +14,22 @@ class App extends Component {
             user: null,
             userData: null,
             property: null,
-            fetching: true,
+            fetchingUser: true,
+            fetchingProperty: false,
             initialAuthChange: false,
-            setUserData: this.setUserData,
+            updateUserData: this.updateUserData,
             setProperty: this.setProperty,
-            setFetching: this.setFetching
+            updateProperty: this.updateProperty
         };
     }
 
     componentDidMount() {
         this.listener = this.props.firebase.auth.onAuthStateChanged(
             user => { 
-                if (user) this.setState({ user: user }, this.setUserData);
+                if (user) this.setState({ user: user }, this.updateUserData);
                 else this.setState({
                     user: null,
-                    fetching: false, 
+                    fetchingUser: false, 
                     initialAuthChange: true 
                 });
             }
@@ -40,25 +41,32 @@ class App extends Component {
         this.listener = undefined;
     }
 
-    setUserData = () => {
-        this.setState({ fetching: true }, () => {
-            this.props.firebase.fetchUserData()
-                .then(userData => {
-                    if (userData) this.setState({ 
-                        userData: userData,
-                        fetching: false,
-                        initialAuthChange: true
-                    });
-                    else throw new Error ('Error fetching user data.');
-                })
-                .catch(err => {
-                    console.log('setUserData: ' + err); 
-                    this.setState({ 
-                        userData: null,
-                        fetching: false,
-                        initialAuthChange: true
-                    });
+    updateUserData = () => {
+        if (!this.state.user) {
+            this.setState({ userData: null });
+            return;
+        }
+
+        this.setState({ fetchingUser: true }, () => {
+            this.props.firebase.fetchUserData().then(userData => {
+                if (userData) this.setState({ 
+                    userData: userData,
+                    fetchingUser: false,
+                    initialAuthChange: true
                 });
+                else throw new Error ('Error fetching user data.');
+            }).catch(err => {
+                console.log('updateUserData: ' + err);
+                this.setState({ 
+                    userData: {
+                        id: this.state.user.uid,
+                        balance: 0,
+                        properties: []
+                    },
+                    fetchingUser: false,
+                    initialAuthChange: true
+                });
+            });
         });
     }
 
@@ -67,28 +75,28 @@ class App extends Component {
             this.setState({ property: null });
             return;
         }
-
-        this.setState({ fetching: true }, () => {
-            this.props.firebase.fetchProperty(id)
-                .then(property => {
-                    if (property) this.setState({ 
-                        property: property,
-                        fetching: false
-                    });
-                    else throw new Error ('Error fetching property.');
-                })
-                .catch(err => { 
-                    console.log('setProperty: ' + err); 
-                    this.setState({ 
-                        property: null,
-                        fetching: false
-                    });
+        
+        this.setState({ fetchingProperty: true }, () => {
+            this.props.firebase.fetchProperty(id).then(property => {
+                if (property) this.setState({ 
+                    property: property,
+                    fetchingProperty: false
                 });
+                else throw new Error ('Error fetching property.');
+            }).catch(err => { 
+                console.log('setProperty: ' + err); 
+                this.setState({ 
+                    property: null,
+                    fetchingProperty: false
+                });
+            });
         });
     }
 
-    setFetching = fetching => {
-        this.setState({ fetching: fetching });
+    updateProperty = () => {
+        if (this.state.property) {
+            this.setProperty(this.state.property.id);
+        }
     }
 
     render() {
@@ -99,10 +107,10 @@ class App extends Component {
                 <LoaderSpinner />
                 
                 {/* home page overlay */}
-                {this.state.initialAuthChange && <HomePage />}
+                {this.state.initialAuthChange && <HomeOverlay />}
 
                 {/* map page underlay*/}
-                <MapPage />
+                <MapUnderlay />
                 
             </SessionContext.Provider>
         );

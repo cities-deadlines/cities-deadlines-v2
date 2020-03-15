@@ -5,9 +5,9 @@ const SessionContext = React.createContext({
     userData: null,
     property: null,
     fetching: false,
+    updateUserData: () => {},
     setProperty: () => {},
-    setFetching: () => {},
-    setUserData: () => {}
+    updateProperty: () => {}
 });
 
 const withSession = Component => props => (
@@ -18,10 +18,10 @@ const withSession = Component => props => (
                 user={session.user} 
                 userData={session.userData}
                 property={session.property} 
-                fetching={session.fetching}
+                fetching={session.fetchingUser || session.fetchingProperty}
+                updateUserData={session.updateUserData}
                 setProperty={session.setProperty}
-                setFetching={session.setFetching}
-                setUserData={session.setUserData}
+                updateProperty={session.updateProperty}
             />
         }
     </SessionContext.Consumer>

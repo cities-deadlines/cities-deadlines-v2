@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
-import UnauthOverlay from './unauth';
-import AuthOverlay from './auth';
+import UnauthHomeOverlay from './unauth-home';
+import AuthHomeOverlay from './auth-home';
 import { withFirebase } from '../firebase';
 import { withSession } from '../session';
 
-class HomePage extends Component {
+class HomeOverlay extends Component {
     render() {
-        if (this.props.user && this.props.userData) var content = <AuthOverlay />;
-        else content = <UnauthOverlay />;
+        if (this.props.user && this.props.userData) var content = <AuthHomeOverlay />;
+        else content = <UnauthHomeOverlay />;
 
         return (
             <div
@@ -38,4 +38,4 @@ class HomePage extends Component {
     }
 }
 
-export default withFirebase(withSession(HomePage));
+export default withFirebase(withSession(HomeOverlay));

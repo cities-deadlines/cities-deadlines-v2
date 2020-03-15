@@ -14,6 +14,8 @@ var config = {
     measurementId: "G-B14WW3BBNY"
 };
 
+const FUNCTIONS_URL = 'https://us-central1-cities-deadlines.cloudfunctions.net/';
+
 class Firebase {
     constructor() {
         app.initializeApp(config)
@@ -63,6 +65,19 @@ class Firebase {
         return propertyRef.get().then(property => {
             if (property.exists) return property.data();
             else return null
+        });
+    }
+
+    purchaseProperty = id => {
+        return this.getUser().getIdToken().then(token => {
+            return fetch(FUNCTIONS_URL + 'purchaseProperty', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                    'Property': id,
+                }
+            }).then(res => res.json());
         });
     }
 }

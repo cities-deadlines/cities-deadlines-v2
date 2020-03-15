@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { withFirebase } from '../firebase';
 import { withSession } from '../session';
 
-class MapPage extends Component {
+class MapUnderlay extends Component {
     render() {
         return (
             <div
@@ -30,4 +30,4 @@ class MapPage extends Component {
     }
 }
 
-export default withFirebase(withSession(MapPage));;
+export default withFirebase(withSession(MapUnderlay));;

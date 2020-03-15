@@ -14,7 +14,7 @@ class LoadingSpinner extends Component {
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            zIndex: 3,
+                            zIndex: 10,
 
                             top: 0,
                             left: 0,

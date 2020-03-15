@@ -66,12 +66,17 @@ class UserPanel extends Component {
                         <div>{this.props.userData.balance}</div>
                     </div>
 
-                    {/* user */}
+                    {/* user display */}
                     <div
                         style={{
+                            width: '100%',
                             marginTop: '10px',
+
+                            textAlign: 'center',
                             fontSize: '14px',
-                            fontStyle: 'italic'
+                            fontStyle: 'italic',
+                            overflowX: 'scroll',
+                            whiteSpace: 'nowrap',
                         }}
                     >
                         Signed In as {this.props.user.displayName}
